@@ -1,0 +1,10 @@
+#app {
+  resize: both;
+  background: red;
+  overflow: auto;
+}
+
+#grid-container {
+  background-color: green;
+  height: 100%;
+}
