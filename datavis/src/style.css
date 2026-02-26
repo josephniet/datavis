@@ -1,10 +1,43 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-family: system-ui, sans-serif;
+}
+
 #app {
-  resize: both;
-  background: red;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 #grid-container {
-  background-color: green;
-  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+  padding: 1rem;
+}
+
+#grid-container > * {
+  min-height: 200px;
+  background: #334155;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  #grid-container {
+    grid-template-columns: 1fr;
+  }
 }
