@@ -1,10 +1,12 @@
-#app {
+#test-container {
   resize: both;
   background: red;
   overflow: auto;
+  height:50vh;
 }
 
-#grid-container {
+grid-visualiser {
+  display: block;
   background-color: green;
   height: 100%;
 }
