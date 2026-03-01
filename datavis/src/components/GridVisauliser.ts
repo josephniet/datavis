@@ -1,5 +1,5 @@
 import { BaseCanvasVisualizer, type CanvasSize } from "./BaseCanvasVisualiser";
-import type { LevelStats, LevelResults, LevelStyle, LevelData, Shapes, CellStyle } from "../types";
+import type { LevelStats, LevelResults, LevelData, Shapes, CellStyle } from "../types";
 import { calculateLevelStats } from "../scoreUtils";
 import type { DrawShape } from "./drawShapes";
 import { drawCircle, drawDiamond, drawIrregularPentagon, drawRoundedSquare, drawTriangle } from "./drawShapes";
@@ -47,7 +47,16 @@ function getGraphData(gridConfig: gridConfig, levelStats: LevelStats): graphData
     }
 }
 
+// function scaleFalloff(index: number, threshold: number): number {
+//     if (threshold <= 4) return 1;
+//     const distanceFromThreshold = index - threshold;
+//     const scale = distanceFromThreshold <= 0 ? 1
+//         : distanceFromThreshold === 1 ? 0.9
+//             : distanceFromThreshold === 2 ? 0.75
+//                 : 0.4;
 
+//     return scale;
+// }
 
 function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData["style"]) {
     let cellStyle: CellStyle = {
@@ -56,9 +65,11 @@ function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData
         scale: 1,
         shape: levelStyle.shape
     }
-    if (index < graphData.score) cellStyle.color = levelStyle.colorSecondary;
+    if (index >= graphData.score) cellStyle.opacity = 0.5;
+    // if (index >= graphData.speed) cellStyle.scale = 0.4;
+    // const scale = scaleFalloff(index, graphData.speed)
+    // cellStyle.scale = scale;
     if (index >= graphData.speed) cellStyle.scale = 0.4;
-    if (index >= graphData.accuracy) cellStyle.opacity = 0.5;
 
     return cellStyle
 }

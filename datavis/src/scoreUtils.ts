@@ -1,15 +1,10 @@
-import type { LevelData, LevelResults, LevelStats, Shapes, LevelStyle } from "./types";
+import type { LevelData, LevelResults } from "./types";
 import { levelConfig } from "./store/levelConfig";
 
 function decimalise(value: number, max: number, min: number = 0, inverse: boolean = false): number {
     if (max <= min) return 0;
     const ratio = Math.round(Math.min(Math.max((value - min) / (max - min), 0), 1) * 100) / 100;
     return inverse ? Math.round((1 - ratio) * 100) / 100 : ratio;
-}
-
-
-function getShape(level: number): Shapes {
-    return levelConfig[level].shape
 }
 
 

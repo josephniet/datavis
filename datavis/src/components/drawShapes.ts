@@ -51,8 +51,6 @@ export function drawIrregularPentagon(ctx: CanvasRenderingContext2D, size: numbe
 }
 
 export function drawDiamond(ctx: CanvasRenderingContext2D, size: number): void {
-    const x = - size / 2;
-    const y = - size / 2;
     const cy = 0;
     const cx = 0;
     const left = cx - size / 2;

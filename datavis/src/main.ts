@@ -7,6 +7,7 @@ import { ScoreStats } from './components/ScoreStats.ts';
 //external app stuff
 const levelList = document.getElementById('level-list') as HTMLElement;
 const scoreStats = document.querySelector('score-stats') as ScoreStats;
+const exampleCode = document.querySelector('#example-code') as HTMLElement;
 
 levelList.addEventListener('click', (e) => {
     const button = (e.target as HTMLElement).closest('button');
@@ -40,4 +41,5 @@ function setData(levelData: LevelResults) {
     const visualiser = document.querySelector('grid-visualiser') as GridVisualiser;
     visualiser.setData(levelData);
     scoreStats.setData(levelData);
+    exampleCode.innerHTML = JSON.stringify(levelData, null, 4);
 }

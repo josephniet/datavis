@@ -1,5 +1,5 @@
 //368057
-import type { Shapes, LevelConfig } from "../types"
+import type { LevelConfig } from "../types"
 
 export const levelConfig: Record<number, LevelConfig> = {
     1: {

@@ -20,7 +20,7 @@ const level2: LevelResults = {
 }
 const level3: LevelResults = {
     level: 3,
-    points: 10,
+    points: 0,
     pointsAvailable: 100,
     timeTaken: 230,
     timeAvailable: 90,
@@ -29,11 +29,11 @@ const level3: LevelResults = {
 }
 const level4: LevelResults = {
     level: 4,
-    points: 0,
+    points: 50,
     pointsAvailable: 100,
     timeTaken: 30,
     timeAvailable: 90,
-    answersCorrect: 0,
+    answersCorrect: 3,
     answersTotal: 12,
 }
 const level5: LevelResults = {

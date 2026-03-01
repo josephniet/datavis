@@ -1,4 +1,4 @@
-import type { LevelResults, LevelStats, LevelData } from "../types";
+import type { LevelResults } from "../types";
 import { calculateLevelStats } from "../scoreUtils";
 export class ScoreStats extends HTMLElement {
     setData(levelResults: LevelResults): void {
