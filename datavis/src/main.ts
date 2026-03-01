@@ -33,6 +33,7 @@ levelList.addEventListener('click', (e) => {
         //not yet handled, this is a different kind of visualiser
     }
 })
+setData(scoreData[0]);
 
 function setData(levelData: LevelResults) {
     // console.log('setting data for level', levelData.level, levelData)

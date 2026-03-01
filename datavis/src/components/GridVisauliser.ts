@@ -113,13 +113,22 @@ function drawIrregularPentagon(ctx: CanvasRenderingContext2D, x: number, y: numb
 }
 
 function drawDiamond(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, cellStyle: CellStyle): void {
-    const cx = x + cellSize / 2;
-    const cy = y + cellSize / 2;
+    const xCellCentre = x + cellSize / 2;
+    const yCellCentre = y + cellSize / 2;
+    ctx.save();
+    ctx.translate(xCellCentre, yCellCentre);
+    const cy = 0;
+    const cx = 0;
+    const left = cx - cellSize / 2;
+    const right = cx + cellSize / 2;
+    const top = cy - cellSize / 2;
+    const bottom = cy + cellSize / 2;
+    ctx.scale(cellStyle.scale, cellStyle.scale);
     const points = [
-        { x: cx, y: y },
-        { x: x + cellSize, y: cy },
-        { x: cx, y: y + cellSize },
-        { x: x, y: cy },
+        { x: cx, y: top },
+        { x: right, y: cy },
+        { x: cx, y: bottom },
+        { x: left, y: cy },
     ]
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y)
@@ -127,6 +136,7 @@ function drawDiamond(ctx: CanvasRenderingContext2D, x: number, y: number, cellSi
         ctx.lineTo(points[i].x, points[i].y)
     }
     ctx.closePath()
+    ctx.restore()
 }
 
 
