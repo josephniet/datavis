@@ -1,41 +1,40 @@
-import type { LevelStyle, LevelData, CellStyle } from '../types'
+export type DrawShape = (ctx: CanvasRenderingContext2D, size: number) => void;
 
-export type DrawShape = (ctx: CanvasRenderingContext2D, cellSize: number, CellStyle: CellStyle) => void;
-
-
-
-export function drawCircle(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, LevelStyle: LevelStyle): void {
-    const cx = x + cellSize / 2
-    const cy = y + cellSize / 2
-    const radius = (cellSize / 2) * LevelStyle.scale;
+export function drawCircle(ctx: CanvasRenderingContext2D, size: number): void {
+    const radius = size / 2;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
 }
 
-export function drawRoundedSquare(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, LevelStyle: LevelStyle): void {
+export function drawRoundedSquare(ctx: CanvasRenderingContext2D, size: number): void {
     ctx.beginPath();
-    ctx.roundRect(x, y, cellSize, cellSize, cellSize / 5)
+    const x = - size / 2;
+    const y = - size / 2;
+    ctx.roundRect(x, y, size, size, size / 5)
 }
 
-export function drawTriangle(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, LevelStyle: LevelStyle): void {
+export function drawTriangle(ctx: CanvasRenderingContext2D, size: number): void {
+    const x = - size / 2;
+    const y = - size / 2;
     ctx.beginPath();
-    ctx.moveTo(x, y + cellSize)
-    ctx.lineTo(x + cellSize / 2, y)
-    ctx.lineTo(x + cellSize, y + cellSize)
+    ctx.moveTo(x, y + size)
+    ctx.lineTo(x + size / 2, y)
+    ctx.lineTo(x + size, y + size)
     ctx.closePath();
 }
 
-export function drawIrregularPentagon(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, LevelStyle: LevelStyle): void {
-    const cx = x + cellSize / 2;
-    const cy = x + cellSize / 2;
+export function drawIrregularPentagon(ctx: CanvasRenderingContext2D, size: number): void {
+    const x = - size / 2;
+    const y = - size / 2;
+    const cx = x + size / 2;
     const bottomRatio = .191;
-    const yNotMiddle = y + (cellSize * 0.38);
+    const yNotMiddle = y + (size * 0.38);
     const left = x;
-    const right = x + cellSize;
-    const xNotRight = right - (cellSize * bottomRatio);
-    const xNotLeft = left + (cellSize * bottomRatio);
+    const right = x + size;
+    const xNotRight = right - (size * bottomRatio);
+    const xNotLeft = left + (size * bottomRatio);
     const top = y;
-    const bottom = y + cellSize;
+    const bottom = y + size;
     const points = [
         { x: cx, y: top },
         { x: right, y: yNotMiddle },
@@ -51,18 +50,15 @@ export function drawIrregularPentagon(ctx: CanvasRenderingContext2D, x: number, 
     ctx.closePath()
 }
 
-export function drawDiamond(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, LevelStyle: LevelStyle): void {
-    const xCellCentre = x + cellSize / 2;
-    const yCellCentre = y + cellSize / 2;
-    ctx.save();
-    ctx.translate(xCellCentre, yCellCentre);
+export function drawDiamond(ctx: CanvasRenderingContext2D, size: number): void {
+    const x = - size / 2;
+    const y = - size / 2;
     const cy = 0;
     const cx = 0;
-    const left = cx - cellSize / 2;
-    const right = cx + cellSize / 2;
-    const top = cy - cellSize / 2;
-    const bottom = cy + cellSize / 2;
-    ctx.scale(LevelStyle.scale, LevelStyle.scale);
+    const left = cx - size / 2;
+    const right = cx + size / 2;
+    const top = cy - size / 2;
+    const bottom = cy + size / 2;
     const points = [
         { x: cx, y: top },
         { x: right, y: cy },
@@ -75,5 +71,4 @@ export function drawDiamond(ctx: CanvasRenderingContext2D, x: number, y: number,
         ctx.lineTo(points[i].x, points[i].y)
     }
     ctx.closePath()
-    ctx.restore()
 }

@@ -2,6 +2,7 @@ import { BaseCanvasVisualizer, type CanvasSize } from "./BaseCanvasVisualiser";
 import type { LevelStats, LevelResults, LevelStyle, LevelData, Shapes, CellStyle } from "../types";
 import { calculateLevelStats } from "../scoreUtils";
 import type { DrawShape } from "./drawShapes";
+import { drawCircle, drawDiamond, drawIrregularPentagon, drawRoundedSquare, drawTriangle } from "./drawShapes";
 
 
 type gridConfig = {
@@ -51,12 +52,12 @@ function getGraphData(gridConfig: gridConfig, levelStats: LevelStats): graphData
 function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData["style"]) {
     let cellStyle: CellStyle = {
         opacity: 1,
-        color: 'white',
+        color: levelStyle.color,
         scale: 1,
         shape: levelStyle.shape
     }
-    if (index < graphData.score) cellStyle.color = 'green';
-    if (index >= graphData.speed) cellStyle.scale = 0.5;
+    if (index < graphData.score) cellStyle.color = levelStyle.colorSecondary;
+    if (index >= graphData.speed) cellStyle.scale = 0.4;
     if (index >= graphData.accuracy) cellStyle.opacity = 0.5;
 
     return cellStyle
@@ -96,22 +97,23 @@ export class GridVisualiser extends BaseCanvasVisualizer {
                 const cellStyle = getCellStyle(i, graphData, this.levelData.style);
                 const x = col * cellSize;
                 const y = row * cellSize;
+                const cx = x + cellSize / 2;
+                const cy = y + cellSize / 2;
 
                 const shapeDrawers: Record<Shapes, DrawShape> = {
-                    circle: drawCircle,
-                    square: drawRoundedSquare,
-                    triangle: drawTriangle,
-                    diamond: drawDiamond,
-                    pentagon: drawPentagon
-                },
-                    // drawCircle(ctx, x, y, cellSize, LevelStyle);
-                    drawIrregularPentagon();
-                // drawDiamond(ctx, x, y, cellSize, LevelStyle);
-                // drawRoundedSquare(ctx, x, y, cellSize, LevelStyle);
-                // drawTriangle(ctx, x, y, cellSize, LevelStyle);
-                ctx.fillStyle = LevelStyle.color;
-                ctx.globalAlpha = LevelStyle.opacity;
-                // ctx.scale(LevelStyle.scale, LevelStyle.scale);
+                    "circle": drawCircle,
+                    "square": drawRoundedSquare,
+                    "triangle": drawTriangle,
+                    "diamond": drawDiamond,
+                    "pentagon": drawIrregularPentagon
+                };
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.scale(cellStyle.scale, cellStyle.scale)
+                shapeDrawers[this.levelData.style.shape](ctx, cellSize)
+                ctx.restore()
+                ctx.fillStyle = cellStyle.color;
+                ctx.globalAlpha = cellStyle.opacity;
                 ctx.fill();
                 i++;
             }

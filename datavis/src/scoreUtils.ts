@@ -1,4 +1,5 @@
 import type { LevelData, LevelResults, LevelStats, Shapes, LevelStyle } from "./types";
+import { levelConfig } from "./store/levelConfig";
 
 function decimalise(value: number, max: number, min: number = 0, inverse: boolean = false): number {
     if (max <= min) return 0;
@@ -8,14 +9,7 @@ function decimalise(value: number, max: number, min: number = 0, inverse: boolea
 
 
 function getShape(level: number): Shapes {
-    const levelShapes: Record<number, Shapes> = {
-        1: 'circle',
-        2: "square",
-        3: "triangle",
-        4: "diamond",
-        5: "pentagon"
-    }
-    return levelShapes[level]
+    return levelConfig[level].shape
 }
 
 
@@ -25,6 +19,7 @@ export function calculateLevelStats(levelResults: LevelResults): LevelData {
         accuracyDecimal = decimalise(levelResults.answersCorrect, levelResults.answersTotal);
     const combinedDecimal = Math.round(100 * (scoreDecimal * 0.333 + speedDecimal * 0.333 + accuracyDecimal * 0.333)) / 100;
     return {
+        config: levelConfig[levelResults.level],
         results: levelResults,
         stats: {
             scoreDecimal,
@@ -33,8 +28,9 @@ export function calculateLevelStats(levelResults: LevelResults): LevelData {
             combinedDecimal,
         },
         style: {
-            color: 'green',
-            shape: getShape(levelResults.level)
+            color: levelConfig[levelResults.level].color,
+            colorSecondary: levelConfig[levelResults.level].colorSecondary,
+            shape: levelConfig[levelResults.level].shape
         }
     }
 

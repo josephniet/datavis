@@ -1,3 +1,9 @@
+export type LevelConfig = {
+    shape: Shapes,
+    color: string,
+    colorSecondary: string
+    // colorSecondary: string
+}
 export type LevelResults = {
     level: number;
     points: number;
@@ -16,10 +22,12 @@ export type LevelStats = {
 
 export type LevelStyle = {
     color: string,
-    shape: Shapes
+    shape: Shapes,
+    colorSecondary: string
 }
 
 export type LevelData = {
+    config: LevelConfig,
     results: LevelResults,
     stats: LevelStats,
     style: LevelStyle
