@@ -40,7 +40,7 @@ const level5: LevelResults = {
     level: 5,
     points: 50,
     pointsAvailable: 100,
-    timeTaken: 45,
+    timeTaken: 50,
     timeAvailable: 90,
     answersCorrect: 6,
     answersTotal: 12,

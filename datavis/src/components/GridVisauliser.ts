@@ -59,18 +59,75 @@ function getCellStyle(index: number, graphData: graphData): CellStyle {
         opacity: 1,
         shape: 'circle' as const
     }
-    if (index <= graphData.score) cellStyle.color = 'green';
+    if (index < graphData.score) cellStyle.color = 'green';
     if (index >= graphData.speed) cellStyle.scale = 0.5;
     if (index >= graphData.accuracy) cellStyle.opacity = 0.5;
     return cellStyle
 }
 
 function drawCircle(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, cellStyle: CellStyle): void {
+    const cx = x + cellSize / 2
+    const cy = y + cellSize / 2
     const radius = (cellSize / 2) * cellStyle.scale;
     ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
 }
 
+function drawRoundedSquare(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, cellStyle: CellStyle): void {
+    ctx.beginPath();
+    ctx.roundRect(x, y, cellSize, cellSize, cellSize / 5)
+}
+
+function drawTriangle(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, cellStyle: CellStyle): void {
+    ctx.beginPath();
+    ctx.moveTo(x, y + cellSize)
+    ctx.lineTo(x + cellSize / 2, y)
+    ctx.lineTo(x + cellSize, y + cellSize)
+    ctx.closePath();
+}
+
+function drawIrregularPentagon(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, cellStyle: CellStyle): void {
+    const cx = x + cellSize / 2;
+    const cy = x + cellSize / 2;
+    const bottomRatio = .191;
+    const yNotMiddle = y + (cellSize * 0.38);
+    const left = x;
+    const right = x + cellSize;
+    const xNotRight = right - (cellSize * bottomRatio);
+    const xNotLeft = left + (cellSize * bottomRatio);
+    const top = y;
+    const bottom = y + cellSize;
+    const points = [
+        { x: cx, y: top },
+        { x: right, y: yNotMiddle },
+        { x: xNotRight, y: bottom },
+        { x: xNotLeft, y: bottom },
+        { x: left, y: yNotMiddle }
+    ]
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y)
+    }
+    ctx.closePath()
+}
+
+function drawDiamond(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, cellStyle: CellStyle): void {
+    const cx = x + cellSize / 2;
+    const cy = y + cellSize / 2;
+    const points = [
+        { x: cx, y: y },
+        { x: x + cellSize, y: cy },
+        { x: cx, y: y + cellSize },
+        { x: x, y: cy },
+    ]
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y)
+    for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y)
+    }
+    ctx.closePath()
+}
 
 
 export class GridVisualiser extends BaseCanvasVisualizer {
@@ -102,9 +159,13 @@ export class GridVisualiser extends BaseCanvasVisualizer {
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < columns; col++) {
                 const cellStyle = getCellStyle(i, graphData);
-                const x = col * cellSize + cellSize / 2;
-                const y = row * cellSize + cellSize / 2;
-                drawCircle(ctx, x, y, cellSize, cellStyle);
+                const x = col * cellSize;
+                const y = row * cellSize;
+                // drawCircle(ctx, x, y, cellSize, cellStyle);
+                drawIrregularPentagon(ctx, x, y, cellSize, cellStyle);
+                drawDiamond(ctx, x, y, cellSize, cellStyle);
+                // drawRoundedSquare(ctx, x, y, cellSize, cellStyle);
+                // drawTriangle(ctx, x, y, cellSize, cellStyle);
                 ctx.fillStyle = cellStyle.color;
                 ctx.globalAlpha = cellStyle.opacity;
                 // ctx.scale(cellStyle.scale, cellStyle.scale);

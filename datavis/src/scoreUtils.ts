@@ -11,7 +11,7 @@ export function calculateLevelStats(data: LevelResults): LevelStats {
     const scoreDecimal = decimalise(data.points, data.pointsAvailable),
         speedDecimal = decimalise(data.timeTaken, data.timeAvailable, 10, true),
         accuracyDecimal = decimalise(data.answersCorrect, data.answersTotal);
-    const combinedDecimal = Math.round(100 * (scoreDecimal * 0.5 + speedDecimal * 0.3 + accuracyDecimal * 0.2)) / 100;
+    const combinedDecimal = Math.round(100 * (scoreDecimal * 0.333 + speedDecimal * 0.333 + accuracyDecimal * 0.333)) / 100;
     return {
         scoreDecimal,
         speedDecimal,
