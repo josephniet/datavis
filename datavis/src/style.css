@@ -2,11 +2,17 @@
   resize: both;
   background: red;
   overflow: auto;
-  height:50vh;
+  height: 50vh;
 }
 
 grid-visualiser {
   display: block;
-  background-color: green;
+  /* background-color: green; */
+  stroke: 1px solid green;
   height: 100%;
+}
+
+score-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
 }

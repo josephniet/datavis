@@ -1,12 +1,42 @@
 import './style.css'
 import { GridVisualiser } from './components/GridVisauliser.ts';
+import scoreData from './store/dummyScoreData.ts';
+import type { LevelResults } from './types.ts';
+import { ScoreStats } from './components/ScoreStats.ts';
 
 //external app stuff
-const level1Button = document.getElementById('level-one') as HTMLButtonElement;
-const level2Button = document.getElementById('level-two') as HTMLButtonElement;
-const level3Button = document.getElementById('level-three') as HTMLButtonElement;
-const level4Button = document.getElementById('level-four') as HTMLButtonElement;
-const level5Button = document.getElementById('level-five') as HTMLButtonElement;
-const circleGraphButton = document.getElementById('circle-graph') as HTMLButtonElement;
+const levelList = document.getElementById('level-list') as HTMLElement;
+const scoreStats = document.querySelector('score-stats') as ScoreStats;
 
+levelList.addEventListener('click', (e) => {
+    const button = (e.target as HTMLElement).closest('button');
+    if (!button) return;
+    const level = button.dataset.level;
+    switch (level) {
+        case '1':
+            setData(scoreData[0]);
+            break;
+        case '2':
+            setData(scoreData[1]);
+            break;
+        case '3':
+            setData(scoreData[2]);
+            break;
+        case '4':
+            setData(scoreData[3]);
+            break;
+        case '5':
+            setData(scoreData[4]);
+            break;
+        case 'end':
+            break;
+        //not yet handled, this is a different kind of visualiser
+    }
+})
 
+function setData(levelData: LevelResults) {
+    // console.log('setting data for level', levelData.level, levelData)
+    const visualiser = document.querySelector('grid-visualiser') as GridVisualiser;
+    visualiser.setData(levelData);
+    scoreStats.setData(levelData);
+}
