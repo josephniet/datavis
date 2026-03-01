@@ -13,3 +13,23 @@ export type LevelStats = {
     accuracyDecimal: number;
     combinedDecimal: number;
 }
+
+export type LevelStyle = {
+    color: string,
+    shape: Shapes
+}
+
+export type LevelData = {
+    results: LevelResults,
+    stats: LevelStats,
+    style: LevelStyle
+}
+
+export type Shapes = "circle" | "square" | "triangle" | "diamond" | "pentagon";
+
+export type CellStyle = {
+    opacity: number,
+    color: string,
+    scale: number,
+    shape: LevelStyle["shape"]
+}

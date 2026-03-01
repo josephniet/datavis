@@ -1,8 +1,9 @@
-import type { LevelResults, LevelStats } from "../types";
+import type { LevelResults, LevelStats, LevelData } from "../types";
 import { calculateLevelStats } from "../scoreUtils";
 export class ScoreStats extends HTMLElement {
     setData(levelResults: LevelResults): void {
-        const levelStats = calculateLevelStats(levelResults);
+        const levelData = calculateLevelStats(levelResults)
+        const levelStats = levelData.stats;
         const row = (val: number, max: number, decimal: number) => {
             const percent = Math.round(decimal * 100);
             const html = `<div>
