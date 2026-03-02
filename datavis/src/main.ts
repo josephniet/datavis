@@ -1,9 +1,9 @@
 import './style.css'
-import { GridVisualiser } from './components/GridVisauliser.ts';
-import { ChartVisualiser } from './components/ChartVisualiser.ts';
-import scoreData from './store/dummyScoreData.ts';
-import type { LevelResults } from './types.ts';
-import { ScoreStats } from './components/ScoreStats.ts';
+import { GridVisualiser } from './components/GridVisauliser';
+import { ChartVisualiser } from './components/ChartVisualiser';
+import scoreData from './store/dummyScoreData';
+import type { LevelResults } from './types';
+import { ScoreStats } from './components/ScoreStats';
 
 //external app stuff
 const levelList = document.getElementById('level-list') as HTMLElement;

@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "dist-unbundled",
+        "module": "ESNext",
+        "noEmit": false,
+        "allowImportingTsExtensions": false
+    }
+}
