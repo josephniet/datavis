@@ -7,10 +7,13 @@ export function drawCircle(ctx: CanvasRenderingContext2D, size: number): void {
 }
 
 export function drawRoundedSquare(ctx: CanvasRenderingContext2D, size: number): void {
+    ctx.save()
+    ctx.scale(0.99, 0.99);
     ctx.beginPath();
     const x = - size / 2;
     const y = - size / 2;
     ctx.roundRect(x, y, size, size, size / 5)
+    ctx.restore()
 }
 
 export function drawTriangle(ctx: CanvasRenderingContext2D, size: number): void {

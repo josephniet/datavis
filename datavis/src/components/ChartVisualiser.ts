@@ -37,18 +37,20 @@ export class ChartVisualiser extends BaseCanvasVisualizer {
             const startAngle = i * angleStep
             const endAngle = startAngle + angleStep;
             const radius = scale * innerRadius;
+            ctx.fillStyle = levelData.style.color;
+            ctx.strokeStyle = levelData.style.color;
             ctx.save();
             ctx.translate(cx, cy)
             ctx.beginPath();
             ctx.moveTo(0, 0);
             ctx.arc(0, 0, radius, startAngle, endAngle);
             ctx.closePath();
-            ctx.fillStyle = levelData.style.color;
+            ctx.lineWidth = 1;
+            ctx.stroke()
             ctx.fill();
             ctx.beginPath();
             ctx.arc(0, 0, cellRadius - ringWidth / 2, startAngle, startAngle + angleStep * sweepRatio)
             ctx.lineWidth = ringWidth;
-            ctx.strokeStyle = levelData.style.color;
             ctx.stroke()
             ctx.restore()
 
