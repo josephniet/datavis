@@ -16,7 +16,8 @@ type gridConfig = {
 
 
 function getGridConfig(size: CanvasSize): gridConfig {
-    const targetCellSize = 54;
+    const unit = Math.min(size.width, size.height) / 100
+    const targetCellSize = unit * 16;
     const columns = Math.floor(size.width / targetCellSize);
     const cellSize = size.width / columns;
     const rows = Math.floor(size.height / cellSize)
@@ -82,13 +83,15 @@ export class GridVisualiser extends BaseCanvasVisualizer {
     connectedCallback(): void {
         super.connectedCallback();
         console.log('grid visualiser connected')
-        this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        this.requestRender();
     }
 
     setData(levelResults: LevelResults): void {
         this.levelData = calculateLevelStats(levelResults);
         console.log('data set for grid visualiser', this.levelData)
-        this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        this.requestRender();
     }
     protected draw(ctx: CanvasRenderingContext2D, size: CanvasSize): void {
         if (this.levelData === null) return; // we have no score data to visualise yet

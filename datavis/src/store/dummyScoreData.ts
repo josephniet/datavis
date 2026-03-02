@@ -9,24 +9,25 @@ const level1: LevelResults = {
     answersCorrect: 9,
     answersTotal: 12,
 }
-//max score
+
+//0 score
 const level2: LevelResults = {
     level: 2,
-    points: 100,
-    pointsAvailable: 100,
-    timeTaken: 0,
-    timeAvailable: 90,
-    answersCorrect: 12,
-    answersTotal: 12,
-}
-//0 score
-const level3: LevelResults = {
-    level: 3,
     points: 0,
     pointsAvailable: 100,
     timeTaken: 230,
     timeAvailable: 90,
     answersCorrect: 0,
+    answersTotal: 12,
+}
+//max score
+const level3: LevelResults = {
+    level: 3,
+    points: 100,
+    pointsAvailable: 100,
+    timeTaken: 0,
+    timeAvailable: 90,
+    answersCorrect: 12,
     answersTotal: 12,
 }
 const level4: LevelResults = {

@@ -1,4 +1,5 @@
-#test-container {
+#test-container,
+#test-container-two {
   resize: both;
   background: rgb(255, 255, 255);
   border: 2px solid black;

@@ -24,7 +24,7 @@ levelList.addEventListener('click', (e) => {
         3: () => setData(scoreData[2]),
         4: () => setData(scoreData[3]),
         5: () => setData(scoreData[4]),
-        share: () => () => { },
+        // share: () => () => { },
     };
     handleStages[level]();
 })

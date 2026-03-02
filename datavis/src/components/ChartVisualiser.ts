@@ -11,34 +11,24 @@ export class ChartVisualiser extends BaseCanvasVisualizer {
         }
         this.gameData = gameResults.map(transformData);
         //
-        this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        this.requestRender()
     }
+
     protected draw(ctx: CanvasRenderingContext2D, size: CanvasSize): void {
         const gameData = this.gameData;
         if (!gameData?.length) {
             console.warn('No game data found')
             return;
         }
+        const unit = Math.min(size.width, size.height) / 100;
         const cellSize = Math.min(size.width, size.height);
         const segments = gameData.length
-        /*
-        divide 360 into 5
-        set as level N
-        get color of the level
-        draw an arc with a radius determined by scoreDecimel
-        */
-        //    const obj = {
-        //        angleStart:0,
-        //        angleEnd: 0,
-        //        color:'string',
-        //        scale: 1,
-        //        progress: 0.5
-        //    }
         const cx = size.width / 2;
         const cy = size.height / 2;
         const cellRadius = cellSize / 2;
-        const outerRingWidth = 20;
-        const innerRadius = cellRadius - outerRingWidth * 2;
+        const ringWidth = unit * 5;
+        const innerRadius = cellRadius - ringWidth * 2;
         const angleStep = (Math.PI * 2) / segments;
 
         gameData.forEach((levelData: LevelData, i: number) => {
@@ -47,32 +37,22 @@ export class ChartVisualiser extends BaseCanvasVisualizer {
             const startAngle = i * angleStep
             const endAngle = startAngle + angleStep;
             const radius = scale * innerRadius;
+            ctx.save();
+            ctx.translate(cx, cy)
             ctx.beginPath();
-            ctx.moveTo(cx, cy);
-            ctx.arc(cx, cy, radius, startAngle, endAngle);
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius, startAngle, endAngle);
             ctx.closePath();
             ctx.fillStyle = levelData.style.color;
-            // ctx.fillStyle = `hsl(${(i / segments) * 360}, 70%, 50%)`;
             ctx.fill();
             ctx.beginPath();
-            ctx.arc(cx, cy, cellRadius, startAngle, startAngle + angleStep * sweepRatio)
-            ctx.lineWidth = 25;
+            ctx.arc(0, 0, cellRadius - ringWidth / 2, startAngle, startAngle + angleStep * sweepRatio)
+            ctx.lineWidth = ringWidth;
             ctx.strokeStyle = levelData.style.color;
             ctx.stroke()
+            ctx.restore()
 
         })
-
-        // for (let i = 0; i < segments; i++) {
-        //     const startAngle = i * angleStep - Math.PI / 2;
-        //     const endAngle = startAngle + angleStep;
-        //     ctx.beginPath();
-        //     ctx.moveTo(cx, cy);
-        //     ctx.arc(cx, cy, radius, startAngle, endAngle);
-        //     ctx.closePath();
-        //     ctx.fillStyle = `hsl(${(i / segments) * 360}, 70%, 50%)`;
-        //     ctx.fill();
-        // }
-
     }
 }
 
