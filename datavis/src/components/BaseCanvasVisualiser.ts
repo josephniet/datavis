@@ -75,12 +75,12 @@ export abstract class BaseCanvasVisualizer extends HTMLElement {
         this.draw(this.ctx, { width, height });
     }
 
-    protected requestRender(): void {
+    protected requestRender(progress: number): void {
         if (!this.canvas || !this.ctx) return;
         const { width, height } = this.canvas;
         if (width <= 0 || height <= 0) return;
-        this.draw(this.ctx, { width, height });
+        this.draw(this.ctx, { width, height }, progress);
     }
 
-    protected abstract draw(ctx: CanvasRenderingContext2D, size: CanvasSize): void;
+    protected abstract draw(ctx: CanvasRenderingContext2D, size: CanvasSize, progress: number): void;
 }

@@ -84,7 +84,7 @@ export class GridVisualiser extends BaseCanvasVisualizer {
         super.connectedCallback();
         console.log('grid visualiser connected')
         // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
-        this.requestRender();
+        this.requestRender(1);
     }
 
     setData(levelResults: LevelResults): void {
