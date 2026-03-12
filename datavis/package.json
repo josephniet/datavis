@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "build-unbundled": "tsc --project tsconfig.unbundled.json"
+    "build-readable": "tsc && vite build --config vite.config.readable.ts"
   },
   "devDependencies": {
     "typescript": "~5.9.3",
