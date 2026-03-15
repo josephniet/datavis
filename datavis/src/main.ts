@@ -31,15 +31,18 @@ levelList.addEventListener('click', (e) => {
 setData(scoreData[0]);
 
 async function setData(levelData: LevelResults) {
-    // const visualiser = document.querySelector('grid-visualiser') as GridVisualiser;
+    // const gridVisualiser = document.querySelector('grid-visualiser') as GridVisualiser;
     const chartVisualiser = document.querySelector('chart-visualiser') as ChartVisualiser;
     chartVisualiser.setData(scoreData)
     scoreStats.setData(levelData);
     exampleCode.innerHTML = JSON.stringify(levelData, null, 4);
-    // chartVisualiser.state = { progress: 1 };
-    while (true) {
-        await chartVisualiser.controller?.playIntro()
-        await chartVisualiser.controller?.playOutro()
-    }
+
+    requestAnimationFrame(() => {
+        chartVisualiser.render({ progress: 1 });
+    })
+    // while (true) {
+    //     await chartVisualiser.controller?.playIntro()
+    //     await chartVisualiser.controller?.playOutro()
+    // }
     // visualiser.setData(levelData);
 }

@@ -1,8 +1,9 @@
+import type { ChartState } from "../types";
 export abstract class CanvasComponent extends HTMLElement {
     protected canvas!: HTMLCanvasElement;
     protected ctx!: CanvasRenderingContext2D;
     private resizeObserver!: ResizeObserver;
-
+    private initialised = false;
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -34,7 +35,9 @@ export abstract class CanvasComponent extends HTMLElement {
     private setupResizeObserver() {
         this.resizeObserver = new ResizeObserver(() => {
             this.resizeCanvas();
-            this.onResize();
+            if (this.initialised) {
+                this.onResize();
+            }
         });
         this.resizeObserver.observe(this);
     }
@@ -57,12 +60,11 @@ export abstract class CanvasComponent extends HTMLElement {
         this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    protected onResize() {
-        this.render({ progress: this.controller?.currentProgress ?? 0 });
-    }
+
 
     protected get width() { return this.canvas.width; }
     protected get height() { return this.canvas.height; }
 
+    protected abstract onResize(): void;
     protected abstract render(state: ChartState): void;
 }

@@ -15,7 +15,7 @@ type gridConfig = {
 
 
 
-function getGridConfig(size: CanvasSize): gridConfig {
+function getGridConfig(size: { width: number, height: number }): gridConfig {
     const unit = Math.min(size.width, size.height) / 100
     const targetCellSize = unit * 16;
     const columns = Math.floor(size.width / targetCellSize);
@@ -78,29 +78,21 @@ function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData
 
 
 export class GridVisualiser extends CanvasComponent {
+    private lastState: ChartState = { progress: 0 }
     // scoreData: LevelStats | null = null;
     levelData: LevelData | null = null;
-    connectedCallback(): void {
-        super.connectedCallback();
-        console.log('grid visualiser connected')
-        // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
-        this.requestRender(1);
-    }
-
     setData(levelResults: LevelResults): void {
         this.levelData = calculateLevelStats(levelResults);
         console.log('data set for grid visualiser', this.levelData)
         // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
-        this.requestRender();
     }
-    render(state: ChartState) {
-
-    }
-    protected draw(ctx: CanvasRenderingContext2D, size: CanvasSize): void {
+    render(state: ChartState): void {
         if (this.levelData === null) return; // we have no score data to visualise yet
-        const { width, height } = size;
+        const width = this.width;
+        const height = this.height;
+        const ctx = this.ctx;
         ctx.clearRect(0, 0, width, height);
-        const gridConfig = getGridConfig(size);
+        const gridConfig = getGridConfig({ width, height });
         const graphData = getGraphData(gridConfig, this.levelData.stats);
         const cellSize = gridConfig.cellSize;
         const columns = gridConfig.columns;
