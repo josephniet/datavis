@@ -1,61 +1,62 @@
 import { calculateLevelStats } from "../scoreUtils";
 import type { LevelData, LevelResults } from "../types";
-import { BaseCanvasVisualizer, type CanvasSize } from "./BaseCanvasVisualiser";
+import { AnimationController } from "./AnimationController";
+import { CanvasComponent } from "./CanvasComponent";
+import type { ChartState } from "../types";
 
-
-export class ChartVisualiser extends BaseCanvasVisualizer {
+export class ChartVisualiser extends CanvasComponent {
     gameData: LevelData[] | null = null;
-    setData(gameResults: LevelResults[]): void {
-        function transformData(levelResult: LevelResults): LevelData {
-            return calculateLevelStats(levelResult)
-        }
-        this.gameData = gameResults.map(transformData);
-        //
-        // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
-        this.requestRender()
+    public controller: AnimationController | null = null;
+    setData(gameResults: LevelResults[]) {
+        this.gameData = gameResults.map(calculateLevelStats);
+        this.controller = new AnimationController(this);
     }
 
-    protected draw(ctx: CanvasRenderingContext2D, size: CanvasSize): void {
-        const gameData = this.gameData;
-        if (!gameData?.length) {
-            console.warn('No game data found')
-            return;
-        }
-        const unit = Math.min(size.width, size.height) / 100;
-        const cellSize = Math.min(size.width, size.height);
-        const segments = gameData.length
-        const cx = size.width / 2;
-        const cy = size.height / 2;
-        const cellRadius = cellSize / 2;
-        const ringWidth = unit * 5;
-        const innerRadius = cellRadius - ringWidth * 2;
-        const angleStep = (Math.PI * 2) / segments;
+    // The only public method the controller needs to know about
+    render(state: ChartState) {
+        const { gameData } = this;
+        if (!gameData?.length) return;
 
-        gameData.forEach((levelData: LevelData, i: number) => {
+        const { progress } = state;
+        const cell = Math.min(this.width, this.height);
+        const cx = this.width / 2;
+        const cy = this.height / 2;
+        const cellRadius = cell / 2;
+        const ringWidth = 5;
+        const innerRadius = cellRadius - ringWidth * 2;
+        const angleStep = (Math.PI * 2) / gameData.length;
+        const ctx = this.ctx;
+
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        gameData.forEach((levelData, i) => {
             const scale = levelData.stats.scoreDecimal;
             const sweepRatio = levelData.stats.speedDecimal;
-            const startAngle = i * angleStep
-            const endAngle = startAngle + angleStep;
+            const startAngle = i * angleStep;
             const radius = scale * innerRadius;
+
+            ctx.save();
+            ctx.translate(cx, cy);
             ctx.fillStyle = levelData.style.color;
             ctx.strokeStyle = levelData.style.color;
-            ctx.save();
-            ctx.translate(cx, cy)
+
+            //inner circle
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.arc(0, 0, radius, startAngle, endAngle);
+            ctx.arc(0, 0, radius * progress, startAngle, startAngle + angleStep);
             ctx.closePath();
             ctx.lineWidth = 1;
-            ctx.stroke()
+            ctx.stroke();
             ctx.fill();
-            ctx.beginPath();
-            ctx.arc(0, 0, cellRadius - ringWidth / 2, startAngle, startAngle + angleStep * sweepRatio)
-            ctx.lineWidth = ringWidth;
-            ctx.stroke()
-            ctx.restore()
 
-        })
+            //outer circle
+            ctx.beginPath();
+            ctx.arc(0, 0, cellRadius - ringWidth / 2, startAngle, startAngle + angleStep * sweepRatio * progress);
+            ctx.lineWidth = ringWidth;
+            ctx.stroke();
+
+            ctx.restore();
+        });
     }
 }
-
 customElements.define('chart-visualiser', ChartVisualiser)

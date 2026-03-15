@@ -1,5 +1,5 @@
 import './style.css'
-import { GridVisualiser } from './components/GridVisauliser';
+// import { GridVisualiser } from './components/GridVisauliser';
 import { ChartVisualiser } from './components/ChartVisualiser';
 import scoreData from './store/dummyScoreData';
 import type { LevelResults } from './types';
@@ -30,11 +30,16 @@ levelList.addEventListener('click', (e) => {
 })
 setData(scoreData[0]);
 
-function setData(levelData: LevelResults) {
-    const visualiser = document.querySelector('grid-visualiser') as GridVisualiser;
+async function setData(levelData: LevelResults) {
+    // const visualiser = document.querySelector('grid-visualiser') as GridVisualiser;
     const chartVisualiser = document.querySelector('chart-visualiser') as ChartVisualiser;
     chartVisualiser.setData(scoreData)
-    visualiser.setData(levelData);
     scoreStats.setData(levelData);
     exampleCode.innerHTML = JSON.stringify(levelData, null, 4);
+    // chartVisualiser.state = { progress: 1 };
+    while (true) {
+        await chartVisualiser.controller?.playIntro()
+        await chartVisualiser.controller?.playOutro()
+    }
+    // visualiser.setData(levelData);
 }

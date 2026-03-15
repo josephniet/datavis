@@ -1,5 +1,5 @@
-import { BaseCanvasVisualizer, type CanvasSize } from "./BaseCanvasVisualiser";
-import type { LevelStats, LevelResults, LevelData, Shapes, CellStyle } from "../types";
+import { CanvasComponent } from "./CanvasComponent";
+import type { LevelStats, LevelResults, LevelData, Shapes, CellStyle, ChartState } from "../types";
 import { calculateLevelStats } from "../scoreUtils";
 import type { DrawShape } from "./drawShapes";
 import { drawCircle, drawDiamond, drawIrregularPentagon, drawRoundedSquare, drawTriangle } from "./drawShapes";
@@ -77,7 +77,7 @@ function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData
 
 
 
-export class GridVisualiser extends BaseCanvasVisualizer {
+export class GridVisualiser extends CanvasComponent {
     // scoreData: LevelStats | null = null;
     levelData: LevelData | null = null;
     connectedCallback(): void {
@@ -92,6 +92,9 @@ export class GridVisualiser extends BaseCanvasVisualizer {
         console.log('data set for grid visualiser', this.levelData)
         // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
         this.requestRender();
+    }
+    render(state: ChartState) {
+
     }
     protected draw(ctx: CanvasRenderingContext2D, size: CanvasSize): void {
         if (this.levelData === null) return; // we have no score data to visualise yet

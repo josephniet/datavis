@@ -41,3 +41,7 @@ export type CellStyle = {
     scale: number,
     shape: LevelStyle["shape"]
 }
+
+export interface ChartState {
+    progress: number;
+}
