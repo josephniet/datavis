@@ -2,7 +2,7 @@ import './style.css'
 import { GridVisualiser } from './components/GridVisauliser';
 import { ChartVisualiser } from './components/ChartVisualiser';
 import scoreData from './store/dummyScoreData';
-import type { LevelResults } from './types';
+import type { ChartState, LevelResults } from './types';
 import { ScoreStats } from './components/ScoreStats';
 import gsap from 'gsap';
 
@@ -29,7 +29,10 @@ levelList.addEventListener('click', (e) => {
     };
     handleStages[level]();
 })
+let chartIntroAnimation: null | gsap.core.Tween = null;
+let gridIntroAnimation: null | gsap.core.Tween = null;
 setData(scoreData[0]);
+
 
 async function setData(levelData: LevelResults) {
     const gridVisualiser = document.querySelector('grid-visualiser') as GridVisualiser;
@@ -40,27 +43,50 @@ async function setData(levelData: LevelResults) {
     exampleCode.innerHTML = JSON.stringify(levelData, null, 4);
 
 
+    //-------- example with GSAP timeline
+    function chartGsapExample() {
+        const animationState: ChartState = { progress: 0 }
+        if (chartIntroAnimation) chartIntroAnimation.kill()
+        chartIntroAnimation = gsap.to(animationState, {
+            progress: 1,              // animate from current value → 1
+            overwrite: true,
+            duration: 2.8,
+            ease: "power2.out",       // or "none" for linear scrub, "expo.out", etc.
+            repeat: -1,
+            repeatDelay: 1,
+            yoyo: true,
+            onUpdate: () => {
+                chartVisualiser.render(animationState);   // redraw every frame
+            },
+            onComplete: () => {
+                console.log("Animation finished");
+            }
+        })
+    }
 
-    //example with GSAP timeline
-    // const timelineDefaults = {
-    //     repeat: -1,
-    //     yoyo: true,
-    //     repeatDelay: 0,
-    // }
-    // const tlPie = gsap.timeline(timelineDefaults);
-    // tlPie.add(chartVisualiser.controller!.playIntro());
-    // tlPie.add(chartVisualiser.controller!.playOutro());
 
-    // const tlGrid = gsap.timeline(timelineDefaults);
-    // tlGrid.add(gridVisualiser.controller!.playIntro());
-    // tlGrid.add(gridVisualiser.controller!.playOutro());
+    function gridGsapExample() {
+        const animationState: ChartState = { progress: 0 }
+        if (gridIntroAnimation) gridIntroAnimation.kill()
+        gridIntroAnimation = gsap.to(animationState, {
+            progress: 1,              // animate from current value → 1
+            overwrite: true,
+            duration: 2.8,
+            ease: "power2.out",       // or "none" for linear scrub, "expo.out", etc.
+            repeat: -1,
+            repeatDelay: 1,
+            yoyo: true,
+            onUpdate: () => {
+                gridVisualiser.render(animationState);   // redraw every frame
+            },
+            onComplete: () => {
+                console.log("Animation finished");
+            },
+        })
+    }
+    gridGsapExample()
+    chartGsapExample()
+    //-------- example just calling static
 
-    //example just calling static
-
-    requestAnimationFrame(() => {
-        chartVisualiser.controller.destroy();
-        gridVisualiser.controller.destroy();
-        chartVisualiser.render({ progress: 1 });
-        gridVisualiser.render({ progress: 1 });
-    })
+    // chartVisualiser.requestRender({ progress: 0.5 })
 }

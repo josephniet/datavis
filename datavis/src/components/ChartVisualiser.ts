@@ -1,50 +1,54 @@
 import { calculateLevelStats } from "../scoreUtils";
 import type { LevelData, LevelResults } from "../types";
-import { AnimationController } from "./AnimationController";
 import { CanvasComponent } from "./CanvasComponent";
 import type { ChartState } from "../types";
 import { segmentProgress } from "../utils";
 
 export class ChartVisualiser extends CanvasComponent {
-    public controller: AnimationController = new AnimationController(this);
     private lastState: ChartState = { progress: 0 }
     gameData: LevelData[] | null = null;
     setData(gameResults: LevelResults[]) {
         this.gameData = gameResults.map(calculateLevelStats);
-        this.controller.destroy()
-        this.controller = new AnimationController(this);
     }
 
-
+    requestRender(state: ChartState) {
+        requestAnimationFrame(() => this.render(state))
+    }
     // The only public method the controller needs to know about
     render(state: ChartState) {
-        this.lastState = state;
-        const { gameData } = this;
-        if (!gameData?.length) return;
-        // const { progress } = state;
-        const cell = Math.min(this.width, this.height);
-        const cx = this.width / 2;
-        const cy = this.height / 2;
-        const cellRadius = cell / 2;
-        const ringWidth = 5;
-        const innerRadius = cellRadius - ringWidth * 2;
-        const angleStep = (Math.PI * 2) / gameData.length;
+        // if (state.progress === this.lastState.progress) return;
+        this.lastState = { ...state };
+        const gameData = this.gameData;
+        if (!gameData?.length) {
+            console.warn('No game data found')
+            return;
+        }
         const ctx = this.ctx;
+        const width = this.width
+        const height = this.height
+        const unit = Math.min(width, height) / 100;
+        const cellSize = Math.min(width, height);
+        const segments = gameData.length
+        const cx = width / 2;
+        const cy = height / 2;
+        const cellRadius = cellSize / 2;
+        const ringWidth = unit * 5;
+        const innerRadius = cellRadius - ringWidth * 2;
+        const angleStep = (Math.PI * 2) / segments;
 
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // console.log('rendering', this.width, this.height, state);
 
-        gameData.forEach((levelData, i) => {
+        gameData.forEach((levelData: LevelData, i: number) => {
             const progress = segmentProgress(state.progress, i, gameData.length, 0.6 / gameData.length)
             const scale = levelData.stats.scoreDecimal;
             const sweepRatio = levelData.stats.speedDecimal;
-            const startAngle = i * angleStep;
+            const startAngle = i * angleStep
+            const endAngle = startAngle + angleStep;
             const radius = scale * innerRadius;
-
-            ctx.save();
-            ctx.translate(cx, cy);
             ctx.fillStyle = levelData.style.color;
             ctx.strokeStyle = levelData.style.color;
+            ctx.save();
+            ctx.translate(cx, cy)
 
             //inner circle
             ctx.beginPath();
@@ -52,22 +56,19 @@ export class ChartVisualiser extends CanvasComponent {
             ctx.arc(0, 0, radius * progress, startAngle, startAngle + angleStep);
             ctx.closePath();
             ctx.lineWidth = 1;
-            ctx.stroke();
+            ctx.stroke()
             ctx.fill();
 
             //outer circle
             ctx.beginPath();
             ctx.arc(0, 0, cellRadius - ringWidth / 2, startAngle, startAngle + angleStep * sweepRatio * progress);
             ctx.lineWidth = ringWidth;
-            ctx.stroke();
+            ctx.stroke()
+            ctx.restore()
 
-            ctx.restore();
         });
     }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        this.controller.destroy();
-    }
+
     protected onResize(): void {
         this.render(this.lastState);
     }

@@ -4,7 +4,6 @@ import { calculateLevelStats } from "../scoreUtils";
 import type { DrawShape } from "./drawShapes";
 import { drawCircle, drawDiamond, drawIrregularPentagon, drawRoundedSquare, drawTriangle } from "./drawShapes";
 import { segmentProgress } from "../utils";
-import { AnimationController } from "./AnimationController";
 
 
 type gridConfig = {
@@ -66,19 +65,19 @@ function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData
 
 
 export class GridVisualiser extends CanvasComponent {
-    public controller: AnimationController = new AnimationController(this);
     private lastState: ChartState = { progress: 0 }
     levelData: LevelData | null = null;
     setData(levelResults: LevelResults): void {
         this.levelData = calculateLevelStats(levelResults);
-        this.controller.destroy()
-        this.controller = new AnimationController(this);
     }
     protected onResize(): void {
         this.render(this.lastState);
     }
+    requestRender(state: ChartState): void {
+        requestAnimationFrame(() => this.render(state))
+    }
     render(state: ChartState): void {
-        this.lastState = state;
+        this.lastState = { ...state };
         if (this.levelData === null) return; // we have no score data to visualise yet
         const width = this.width;
         const height = this.height;
@@ -122,11 +121,7 @@ export class GridVisualiser extends CanvasComponent {
             }
         }
     }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        this.controller.destroy();
-    }
+
 }
 
-console.log('grid visualiser loaded')
 customElements.define('grid-visualiser', GridVisualiser)
