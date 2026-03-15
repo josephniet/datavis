@@ -40,31 +40,27 @@ async function setData(levelData: LevelResults) {
     exampleCode.innerHTML = JSON.stringify(levelData, null, 4);
 
 
-    // const tl = gsap.timeline({
-    //     onComplete: () => chartVisualiser.controller!.stop()
-    // });
-    // tl.add(chartVisualiser.controller!.playIntro());
-    // tl.add(chartVisualiser.controller!.playOutro());
 
-    const tlGrid = gsap.timeline({
-        repeat: -1,
-        yoyo: true
-    });
-    tlGrid.add(gridVisualiser.controller!.playIntro());
-    tlGrid.add(gridVisualiser.controller!.playOutro());
-
-
-    // requestAnimationFrame(() => {
-    //     chartVisualiser.render({ progress: 1 });
-    //     gridVisualiser.render({ progress: 0.5 });
-    // })
-    // await gridVisualiser.controller?.playIntro()
-    // while (true) {
-    //     await chartVisualiser.controller?.playIntro()
-    //     await chartVisualiser.controller?.playOutro()
+    //example with GSAP timeline
+    // const timelineDefaults = {
+    //     repeat: -1,
+    //     yoyo: true,
+    //     repeatDelay: 0,
     // }
-    // while (true) {
-    //     await gridVisualiser.controller?.playIntro()
-    //     await gridVisualiser.controller?.playOutro()
-    // }
+    // const tlPie = gsap.timeline(timelineDefaults);
+    // tlPie.add(chartVisualiser.controller!.playIntro());
+    // tlPie.add(chartVisualiser.controller!.playOutro());
+
+    // const tlGrid = gsap.timeline(timelineDefaults);
+    // tlGrid.add(gridVisualiser.controller!.playIntro());
+    // tlGrid.add(gridVisualiser.controller!.playOutro());
+
+    //example just calling static
+
+    requestAnimationFrame(() => {
+        chartVisualiser.controller.destroy();
+        gridVisualiser.controller.destroy();
+        chartVisualiser.render({ progress: 1 });
+        gridVisualiser.render({ progress: 1 });
+    })
 }

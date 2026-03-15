@@ -1,19 +1,23 @@
 import gsap from 'gsap';
-import { CanvasComponent } from './CanvasComponent';
-import { ChartVisualiser } from './ChartVisualiser';
-import { GridVisualiser } from './GridVisauliser';
-import type { ChartState } from '../types';
+import type { ChartVisualiser } from './ChartVisualiser';
+import type { GridVisualiser } from './GridVisauliser';
 type Chart = GridVisualiser | ChartVisualiser;
 
 
 export class AnimationController {
     private state = { progress: 0 };
 
+    // connect() {
+    //     gsap.ticker.add(this.tick);
+    // }
+    // disconnect() {
+    //     gsap.ticker.remove(this.tick)
+    // }
     constructor(private chart: Chart) {
         gsap.ticker.add(this.tick);
         const count = (gsap.ticker as any)._listeners?.length ?? 0;
 
-        console.log("GSAP ticker callbacks:", count);
+        console.log("GSAP ticker callbacks:", count, (gsap.ticker as any)._listeners);
     }
 
     private tick = () => {

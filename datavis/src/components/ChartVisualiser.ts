@@ -6,16 +6,15 @@ import type { ChartState } from "../types";
 import { segmentProgress } from "../utils";
 
 export class ChartVisualiser extends CanvasComponent {
+    public controller: AnimationController = new AnimationController(this);
     private lastState: ChartState = { progress: 0 }
     gameData: LevelData[] | null = null;
-    public controller: AnimationController | null = null;
     setData(gameResults: LevelResults[]) {
         this.gameData = gameResults.map(calculateLevelStats);
+        this.controller.destroy()
         this.controller = new AnimationController(this);
     }
-    connectAnimationController() {
 
-    }
 
     // The only public method the controller needs to know about
     render(state: ChartState) {
@@ -67,7 +66,7 @@ export class ChartVisualiser extends CanvasComponent {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.controller) this.controller.destroy();
+        this.controller.destroy();
     }
     protected onResize(): void {
         this.render(this.lastState);

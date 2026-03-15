@@ -58,9 +58,6 @@ function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData
         shape: levelStyle.shape
     }
     if (index >= graphData.score) cellStyle.opacity = 0.5;
-    // if (index >= graphData.speed) cellStyle.scale = 0.4;
-    // const scale = scaleFalloff(index, graphData.speed)
-    // cellStyle.scale = scale;
     if (index >= graphData.speed) cellStyle.scale = 0.4;
 
     return cellStyle
@@ -69,14 +66,12 @@ function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData
 
 
 export class GridVisualiser extends CanvasComponent {
-    public controller: AnimationController | null = null;
+    public controller: AnimationController = new AnimationController(this);
     private lastState: ChartState = { progress: 0 }
-    // scoreData: LevelStats | null = null;
     levelData: LevelData | null = null;
     setData(levelResults: LevelResults): void {
         this.levelData = calculateLevelStats(levelResults);
-        // console.log('data set for grid visualiser', this.levelData)
-        // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        this.controller.destroy()
         this.controller = new AnimationController(this);
     }
     protected onResize(): void {
@@ -129,7 +124,7 @@ export class GridVisualiser extends CanvasComponent {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.controller) this.controller.destroy();
+        this.controller.destroy();
     }
 }
 
