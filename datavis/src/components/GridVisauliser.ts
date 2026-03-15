@@ -3,6 +3,8 @@ import type { LevelStats, LevelResults, LevelData, Shapes, CellStyle, ChartState
 import { calculateLevelStats } from "../scoreUtils";
 import type { DrawShape } from "./drawShapes";
 import { drawCircle, drawDiamond, drawIrregularPentagon, drawRoundedSquare, drawTriangle } from "./drawShapes";
+import { segmentProgress } from "../utils";
+import { AnimationController } from "./AnimationController";
 
 
 type gridConfig = {
@@ -48,17 +50,6 @@ function getGraphData(gridConfig: gridConfig, levelStats: LevelStats): graphData
     }
 }
 
-// function scaleFalloff(index: number, threshold: number): number {
-//     if (threshold <= 4) return 1;
-//     const distanceFromThreshold = index - threshold;
-//     const scale = distanceFromThreshold <= 0 ? 1
-//         : distanceFromThreshold === 1 ? 0.9
-//             : distanceFromThreshold === 2 ? 0.75
-//                 : 0.4;
-
-//     return scale;
-// }
-
 function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData["style"]) {
     let cellStyle: CellStyle = {
         opacity: 1,
@@ -78,15 +69,21 @@ function getCellStyle(index: number, graphData: graphData, levelStyle: LevelData
 
 
 export class GridVisualiser extends CanvasComponent {
+    public controller: AnimationController | null = null;
     private lastState: ChartState = { progress: 0 }
     // scoreData: LevelStats | null = null;
     levelData: LevelData | null = null;
     setData(levelResults: LevelResults): void {
         this.levelData = calculateLevelStats(levelResults);
-        console.log('data set for grid visualiser', this.levelData)
+        // console.log('data set for grid visualiser', this.levelData)
         // this.draw(this.ctx, { width: this.canvas.width, height: this.canvas.height });
+        this.controller = new AnimationController(this);
+    }
+    protected onResize(): void {
+        this.render(this.lastState);
     }
     render(state: ChartState): void {
+        this.lastState = state;
         if (this.levelData === null) return; // we have no score data to visualise yet
         const width = this.width;
         const height = this.height;
@@ -103,11 +100,13 @@ export class GridVisualiser extends CanvasComponent {
         ctx.clearRect(0, 0, width, height);
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < columns; col++) {
+                const progress = segmentProgress(state.progress, i, gridConfig.cellCount, 0.6 / gridConfig.cellCount)
                 const cellStyle = getCellStyle(i, graphData, this.levelData.style);
                 const x = col * cellSize;
                 const y = row * cellSize;
                 const cx = x + cellSize / 2;
                 const cy = y + cellSize / 2;
+                const scale = cellStyle.scale * progress;
 
                 const shapeDrawers: Record<Shapes, DrawShape> = {
                     "circle": drawCircle,
@@ -118,7 +117,7 @@ export class GridVisualiser extends CanvasComponent {
                 };
                 ctx.save();
                 ctx.translate(cx, cy);
-                ctx.scale(cellStyle.scale, cellStyle.scale)
+                ctx.scale(scale, scale)
                 shapeDrawers[this.levelData.style.shape](ctx, cellSize)
                 ctx.restore()
                 ctx.fillStyle = cellStyle.color;
@@ -127,6 +126,10 @@ export class GridVisualiser extends CanvasComponent {
                 i++;
             }
         }
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.controller) this.controller.destroy();
     }
 }
 

@@ -12,7 +12,10 @@ export abstract class CanvasComponent extends HTMLElement {
     connectedCallback() {
         this.initCanvas();
         this.setupResizeObserver();
-        requestAnimationFrame(() => this.resizeCanvas());
+        requestAnimationFrame(() => {
+            this.resizeCanvas()
+            this.initialised = true;
+        });
     }
 
     disconnectedCallback() {

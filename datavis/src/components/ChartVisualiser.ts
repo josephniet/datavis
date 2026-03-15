@@ -13,6 +13,9 @@ export class ChartVisualiser extends CanvasComponent {
         this.gameData = gameResults.map(calculateLevelStats);
         this.controller = new AnimationController(this);
     }
+    connectAnimationController() {
+
+    }
 
     // The only public method the controller needs to know about
     render(state: ChartState) {
@@ -30,7 +33,7 @@ export class ChartVisualiser extends CanvasComponent {
         const ctx = this.ctx;
 
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        console.log('rendering', this.width, this.height, state);
+        // console.log('rendering', this.width, this.height, state);
 
         gameData.forEach((levelData, i) => {
             const progress = segmentProgress(state.progress, i, gameData.length, 0.6 / gameData.length)
@@ -61,6 +64,10 @@ export class ChartVisualiser extends CanvasComponent {
 
             ctx.restore();
         });
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.controller) this.controller.destroy();
     }
     protected onResize(): void {
         this.render(this.lastState);
